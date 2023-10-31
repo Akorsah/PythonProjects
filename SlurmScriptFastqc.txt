@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH -A bme4350 
+#SBATCH -p instructional 
+#SBATCH --nodes=1 
+#SBATCH --ntasks=1 
+#SBATCH --cpus-per-task=1 
+#SBATCH --time=02:00:00 
+#load required module
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=END
+#SBATCH --mail-user=ajk5qv@virginia.edu
+
+DATA=/scratch/ajk5qv/homework3/rnaseq
+OUTDIR=/scratch/ajk5qv/homework3/outfile
+mkdir -p $OUTDIR
+
+FILES=$(ls -1 $DATA/*.fastq.gz)
+FILE=${FILES[$SLURM_ARRAY_TASK_ID]}
+echo "Processing $FILE"
+
+module purge
+module load fastqc
+module load java
+fastqc $FILE --outdir $OUTDIR &
